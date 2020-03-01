@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2020-02-11T14:14:44 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="natural" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9d9247bf-7514-49d0-a770-4695cd9a3616">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="PostgreSQL"/>
+	<subDataset name="Dataset1" uuid="a4405d5c-4e48-4032-ada3-a35be781685a">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="PostgreSQL"/>
+		<parameter name="id" class="java.lang.String">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[select pot.gestion
+from pres_prescripcion as pp
+join persona as p on p.id_prescripcion = pp.id
+join pres_objeto_tributario as pot on pot.id_prescripcion = pp.id
+where pp.id = $P!{id}]]>
+		</queryString>
+		<field name="gestion" class="java.lang.Integer"/>
+	</subDataset>
+	<parameter name="id" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select p.*, d.direccion, d.telefono, d.celular, d.zona, ptot.name, pot.numero, pp.fur, ppl.razon_social, ppl.num_docum_repre as repre_numero,
+			ppl.correo_electronico, 
+    CASE 
+      WHEN p.expedido_en = 'CB'  THEN 'Cochabamba'
+      WHEN p.expedido_en = 'LP'  THEN 'La Paz'
+      WHEN p.expedido_en = 'SC'  THEN 'Santa Cruz'
+      WHEN p.expedido_en = 'OR'  THEN 'Oruro'
+      WHEN p.expedido_en = 'CH'  THEN 'Chuquisaca'
+      WHEN p.expedido_en = 'PO'  THEN 'Potosi'
+      WHEN p.expedido_en = 'BN'  THEN 'Beni'
+      WHEN p.expedido_en = 'PD'  THEN 'Pando'
+      WHEN p.expedido_en = 'TJ'  THEN 'Tarija'
+      END as expedido_dpto,
+    case 
+     when p.id_tipo_documento = 1 THEN 'Cedula Identidad'
+     when p.id_tipo_documento = 2 THEN 'Numero Identificación Tributaria'
+     end as tipo_documento
+      
+      from pres_prescripcion as pp
+	join pres_objeto_tributario as pot on pot.id_prescripcion = pp.id
+	join pres_tipo_objeto_tributario as ptot on ptot.id = pot.id_tipo_objeto_tributario
+	left join pres_representante_legal as ppl on pp.id = ppl.id_prescripcion
+	left join persona as p on p.id_prescripcion = pp.id 
+	left join domicilio as d on d.id_persona = p.id 
+	where pp.id =   $P!{id} 
+	group by p.id, d.direccion, d.telefono, d.celular, d.zona, ptot.name, pot.numero, pp.fur, ppl.razon_social, ppl.num_docum_repre, ppl.correo_electronico]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="id_tipo_documento" class="java.lang.Integer"/>
+	<field name="id_prescripcion" class="java.lang.Integer"/>
+	<field name="id_usuario" class="java.lang.Integer"/>
+	<field name="numero_documento" class="java.lang.String"/>
+	<field name="expedido_en" class="java.lang.String"/>
+	<field name="nacionalidad" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="apellido_paterno" class="java.lang.String"/>
+	<field name="apellido_materno" class="java.lang.String"/>
+	<field name="apellido_casada" class="java.lang.String"/>
+	<field name="estado_civil" class="java.lang.String"/>
+	<field name="genero" class="java.lang.String"/>
+	<field name="fecha_nacimiento" class="java.sql.Timestamp"/>
+	<field name="created_at" class="java.sql.Timestamp"/>
+	<field name="updated_at" class="java.sql.Timestamp"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="celular" class="java.lang.String"/>
+	<field name="zona" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="numero" class="java.lang.String"/>
+	<field name="fur" class="java.lang.String"/>
+	<field name="razon_social" class="java.lang.String"/>
+	<field name="expedido_dpto" class="java.lang.String"/>
+	<field name="tipo_documento" class="java.lang.String"/>
+	<field name="repre_numero" class="java.lang.String"/>
+	<field name="correo_electronico" class="java.lang.String"/>
+	<title>
+		<band height="160" splitType="Stretch">
+			<staticText>
+				<reportElement x="166" y="99" width="235" height="49" uuid="23d253e5-3dcb-4beb-a2c7-0170e344a09d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD DE PRESCRIPCION TRIBUTOS MUNICIPALES]]></text>
+			</staticText>
+			<image>
+				<reportElement x="9" y="0" width="96" height="92" uuid="94dc3fed-ae62-4643-b280-1ae3b946eb9e"/>
+				<imageExpression><![CDATA["/var/www/html/restServerAtm/public/atm.png"]]></imageExpression>
+			</image>
+			<textField pattern="dd &apos;/&apos; MMMMM &apos;/&apos; yyyy" isBlankWhenNull="true">
+				<reportElement x="438" y="32" width="159" height="27" uuid="faefdc41-9028-4691-b650-194fc657122d">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd-MM-yyyy").format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="110" y="37" width="166" height="42" uuid="3408f0f1-54c4-4ebd-8fad-80e1f774aecf"/>
+				<text><![CDATA[Plaza Colon, acera este, Calle San Martin 448, Cochabamba 4258030]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="10" width="264" height="30" uuid="dfe9f7f1-0226-46b9-bdb1-bb87a5d85376"/>
+				<textElement verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Administración Tributaria Municipal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="392" y="49" width="120" height="28" uuid="da153bb8-918d-45fc-978b-bc7eb002e48a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro DE ORDEN: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="392" y="31" width="74" height="29" uuid="92841a7a-2843-4330-a752-c40f940a1103"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="4" width="352" height="22" uuid="96d0e27e-1f8a-4cdf-b298-98ddc14aa953"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.- DATOS DEL CONTRIBUYENTE REGISTRADO EN EL SISTEMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="392" y="-95" width="100" height="24" uuid="891fb227-ebf4-46a2-bf79-5d011ec31413"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FUR :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="429" y="-95" width="100" height="24" uuid="c6801cfe-7a62-4e3c-84c6-faece7548fd7"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fur}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="180" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="-2" width="571" height="71" uuid="f13e1cc1-53a5-448e-b281-92914d8840ac"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="148" y="2" width="375" height="30" uuid="ab6e4540-61cd-489c-ae29-07f2a72387eb"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nombre}+" "+$F{apellido_paterno}+" "+$F{apellido_materno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="3" width="146" height="30" uuid="acf1e719-d02e-4ae2-8b5d-9fe9cef2e0d1"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRES Y APELLIDOS: ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="119" y="23" width="139" height="29" uuid="3ecf5c80-aacc-494b-8731-6207486319ed">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{numero_documento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="24" width="138" height="30" uuid="c97e4310-9617-40d4-9593-4d80a663576b"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. DOCUMENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="79" width="399" height="22" uuid="029d735c-f798-4a65-8617-6ab661a59ead"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[2.- DATOS DEL REPRESENTANTE LEGAL O TERCERO RESPONSABLE]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="100" width="571" height="71" uuid="c9a14054-5c6f-46c4-b6bf-ca8d4b923c5e"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="101" width="146" height="30" uuid="1098a73d-3a23-4a92-94dd-94b966012e91"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRES Y APELLIDOS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="124" width="138" height="27" uuid="c056a786-7c78-4c17-a2b3-ae52a242c60f"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. DOCUMENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="49" width="130" height="20" uuid="dea843bd-bb3e-48fb-955e-0fee3f531ece"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO DOCUMENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="149" width="123" height="19" uuid="942b5ef0-940d-436f-aca9-019e9d381061"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO DOCUMENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="30" width="100" height="18" uuid="47d0b02a-7deb-49af-9658-b7203079eea1"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[EXPEDIDO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="234" y="125" width="100" height="21" uuid="7e31bc53-33dd-4e80-a44f-f17b287a18dd"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[EXPEDIDO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="144" y="100" width="125" height="30" uuid="a322d903-d83d-46f1-b940-5394521661bd"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{razon_social}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="325" y="31" width="100" height="16" uuid="4b110e4c-7f96-42c7-829f-b6ca06d62c82"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{expedido_dpto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="43" width="100" height="30" uuid="c78b772c-7df5-42d7-8843-c28d0f7dc430"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipo_documento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="98" y="130" width="75" height="16" uuid="e855f5fc-7054-4bed-bcd4-60762a0736ae"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{repre_numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="49" width="100" height="18" uuid="6f58612e-8bc3-4ee1-9092-973bed455a68"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CORREO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="270" y="149" width="122" height="13" uuid="54500110-a6d8-474c-b6f7-10b488a86891"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{correo_electronico}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="234" y="147" width="100" height="18" uuid="d61bbe61-64f9-4a56-bfbd-838e11b4c2a0"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CORREO:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="93" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="30" width="570" height="55" uuid="124df9b2-456e-418b-b67c-ab9850c1b180"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="2" y="3" width="367" height="22" uuid="4fc70562-c59f-4849-b6af-e353a278c4d0"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[3.- DOMICILIO DEL CONTRIBUYENTE O TERCERO RESPONSABLE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="30" width="100" height="30" uuid="57130c7f-0bee-45ba-806c-d402668d6089"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DIRECCION: ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="149" y="51" width="100" height="30" uuid="cbc91088-ae53-4de0-980d-36a5a6641a28"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{zona}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="51" width="151" height="30" uuid="56151721-9aec-41af-bc72-4110dd7b527a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ZONA, BARRIO Y/O OTB:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="450" y="56" width="100" height="14" uuid="f79690fa-f6a7-46c7-a36e-303dca4735b3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="382" y="49" width="100" height="30" uuid="9bd4bb80-4bfb-4a4b-99fe-98e0a746c2d8"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TELEFONO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="451" y="31" width="100" height="25" uuid="12d1652c-f396-4f31-b9bb-9183e3833135"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{celular}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="390" y="30" width="100" height="30" uuid="dc22d063-3e54-418d-bb36-6cbb854648e3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CELULAR:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="78" y="30" width="195" height="26" uuid="9782e853-c1db-4877-8297-394e5c909148"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="82">
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="22" width="571" height="57" uuid="2d4ed932-7f44-49e6-80bc-ec84129cc4aa"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="2" y="0" width="330" height="22" uuid="fd9bebdd-f85a-4574-8a18-168f5e09b841">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[4.- OBJETO TRIBUTARIO ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="24" width="123" height="30" uuid="64fa1afb-1736-43de-9f61-222b0d6791b8"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBJETO TRIBUTARIO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="71" y="56" width="100" height="22" uuid="0657e702-45b6-4680-80d4-8b253cff3d27"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="8" y="52" width="100" height="30" uuid="f7cc2c59-e1b4-4586-8837-b8ccb6e48b14"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUMERO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="339" y="22" width="149" height="30" uuid="7606dbba-b54e-42b3-b488-865130828a4b"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GESTIONES SOLICITADA:]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="342" y="49" width="27" height="18" uuid="de8e8ff2-9820-4e99-b3ee-e2041814ce9e">
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Horizontal" ignoreWidth="true">
+					<datasetRun subDataset="Dataset1" uuid="6069e304-4eb2-4f53-9e73-7a3811791fd1">
+						<datasetParameter name="id">
+							<datasetParameterExpression><![CDATA[$P{id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="18" width="27">
+						<textField isBlankWhenNull="true">
+							<reportElement x="0" y="2" width="27" height="16" uuid="da06b545-74fc-4fda-abd2-0a98021ac3c5"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{gestion}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField isBlankWhenNull="true">
+				<reportElement x="132" y="24" width="193" height="30" uuid="09705312-f947-4523-985e-83b73d3c245b"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="129">
+			<staticText>
+				<reportElement x="1" y="9" width="568" height="40" backcolor="#CF3432" uuid="54f52390-67f1-4a11-856e-787318f8f40a">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[*El presente formulario sera utilizado, tercero responsable o representante legal solicite la prescripcion de la deuda acuerdo a lo establecido en los Arts. 52 y 53 de la ley 1340 (gestiones 1995 al 2002); Arts. 59 de la ley (gestiones 2003 al 2006) Art 59 de modificado por la ley 291 y ley 812 (gestiones 2007 adelante). ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="51" width="568" height="40" backcolor="#CF3432" uuid="49f965cb-7331-4fe2-b23c-7c18ce394fc7"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="none"/>
+				<text><![CDATA[*Se debe tener en cuenta que de encontrarse incompleto la informacion y/o presentacion de requisistos, en cumplimientos a la ley 2341(`) la cual debe subsanar los mismos en el plazo de 5 dias habiles, caso contrario se dara por desestimada la solicitud de prescripcion. 
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="92" width="568" height="35" backcolor="#CF3432" uuid="9bd3e451-3654-4d2f-a838-9fa20d386985">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[NOTA.- toda la documentacion debera ser presentada de formar ordenada conforme  se devuelve, foleado, folder amarillo con nepaco]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="30">
+			<line>
+				<reportElement positionType="Float" x="107" y="9" width="381" height="1" uuid="132e6a27-0e6a-4ba1-91f0-4b9fc827ea0f">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="107" y="10" width="372" height="20" uuid="c9bcfcc9-ae1c-4132-a043-78a7d10ae2f1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA CONTRIBUYENTE - TERCERO RESPONSABLE O SOLICITANTE ]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+</jasperReport>
