@@ -128,7 +128,7 @@ $db['atm'] = array(
 	'dsn'	=> 'pgsql:host=localhost;dbname=atm',
 	'hostname' => 'localhost',
 	'username' => 'postgres',
-	'password' => 'victor123',
+	'password' => 'Admin123',
 	'database' => 'atm',
 	'dbdriver' => 'pdo',
 	'dbprefix' => '',

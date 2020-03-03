@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-date_default_timezone_set('America/La_Paz');    #Línea agregada
+date_default_timezone_set('America/La_Paz');    #Línea agregadaa
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ date_default_timezone_set('America/La_Paz');    #Línea agregada
 |
 */
 //$config['base_url'] = '';
-$config['base_url'] = 'http://localhost/restServerAtm/';
+$config['base_url'] = 'http://localhost/api-atm/';
 //$config['base_url'] = 'http://localhost/prueba/';
 
 

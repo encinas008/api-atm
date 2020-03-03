@@ -76,8 +76,8 @@ class Prescripcion extends MY_Controller {
             if (array_key_exists('persona', $this->input->post())){
             $this->form_validation->set_rules('pres_prescripcion[fur]', 'Número Fur', 'required');
             $this->form_validation->set_rules('persona[expedido_en]', 'Lugar Donde fue expedido el CI', 'required|trim|strtoupper');
-            $this->form_validation->set_rules('persona[nombre]', 'Nombre del contribuyente', 'required|trim|strtoupper');
-            $this->form_validation->set_rules('persona[apellido_paterno]', 'apellido del contribuyente', 'required|trim|strtouppe');
+            // $this->form_validation->set_rules('persona[nombre]', 'Nombre del contribuyente', 'required|trim|strtoupper');
+            // $this->form_validation->set_rules('persona[apellido_paterno]', 'apellido del contribuyente', 'required|trim|strtouppe');
             }
             if (array_key_exists('pres_representante_legal', $this->input->post())) {
              //echo "hola funciona";

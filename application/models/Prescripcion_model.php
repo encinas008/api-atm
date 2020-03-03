@@ -191,26 +191,26 @@ class Prescripcion_model extends MY_model {
     */
     public function getCount(){
          
-        $query = $this->db->select('fur, ptop.name, prl.razon_social')
-        ->from('pres_prescripcion as pp')
-        ->join('pres_objeto_tributario as pot', 'pp.id = pot.id_prescripcion')
-        ->join('pres_tipo_objeto_tributario as ptop', 'pot.id_tipo_objeto_tributario = ptop.id')
-        ->join('pres_representante_legal as prl','pp.id = prl.id_prescripcion')
-        ->group_by('fur, ptop.name, prl.razon_social' );
-         $uno= $query->count_all_results();
-          //echo $query->count_all_results();
-          // print_r($uno);
-         $res = $this->db->select('fur, ptop.name, p.nombre')
-          ->from('pres_prescripcion as pp')
-          ->join('pres_objeto_tributario as pot', 'pp.id = pot.id_prescripcion')
-          ->join('pres_tipo_objeto_tributario as ptop', 'pot.id_tipo_objeto_tributario = ptop.id')
-          ->join('persona as p','pp.id = p.id_prescripcion')
-          ->group_by('fur, ptop.name, p.nombre');
-         $dos=$res->count_all_results();
+//         $query = $this->db->select('fur, ptop.name, prl.razon_social')
+//         ->from('pres_prescripcion as pp')
+//         ->join('pres_objeto_tributario as pot', 'pp.id = pot.id_prescripcion')
+//         ->join('pres_tipo_objeto_tributario as ptop', 'pot.id_tipo_objeto_tributario = ptop.id')
+//         ->join('pres_representante_legal as prl','pp.id = prl.id_prescripcion')
+//         ->group_by('fur, ptop.name, prl.razon_social' );
+//          $uno= $query->count_all_results();
+//           //echo $query->count_all_results();
+//           // print_r($uno);
+//          $res = $this->db->select('fur, ptop.name, p.nombre')
+//           ->from('pres_prescripcion as pp')
+//           ->join('pres_objeto_tributario as pot', 'pp.id = pot.id_prescripcion')
+//           ->join('pres_tipo_objeto_tributario as ptop', 'pot.id_tipo_objeto_tributario = ptop.id')
+//           ->join('persona as p','pp.id = p.id_prescripcion')
+//           ->group_by('fur, ptop.name, p.nombre');
+//          $dos=$res->count_all_results();
          
-          $total = $uno + $dos;
-  //       print_r($total);
-        return $total;
+//           $total = $uno + $dos;
+//   //       print_r($total);
+        return 100;
 
     }
 
@@ -225,28 +225,26 @@ class Prescripcion_model extends MY_model {
     */
     public function getByPage($limit, $offset)
     {
-        $this->db->select('fur, token, ptop.name, prl.razon_social as nombre, pp.id, prl.num_docum_repre, pot.numero');
+        $this->db->select('pp.fur, pp.token, p.nombre, p.apellido_paterno, p.apellido_materno');
         $this->db->from('pres_prescripcion as pp');
-        $this->db->join('pres_objeto_tributario as pot', 'pp.id = pot.id_prescripcion');
-        $this->db->join('pres_tipo_objeto_tributario as ptop', 'pot.id_tipo_objeto_tributario = ptop.id');
-        $this->db->join('pres_representante_legal as prl','pp.id = prl.id_prescripcion');
-       // $this->db->join('persona as p','pp.id = p.id_prescripcion');
+        $this->db->join('pres_solicitante as ps', 'pp.id_solicitante = ps.id');
+        $this->db->join('persona as p', 'p.id = ps.id_persona');
         $this->db->limit($limit , $offset);
-        $this->db->group_by('fur, token, ptop.name, nombre, pp.id, prl.num_docum_repre, pot.numero' );
+        //$this->db->group_by('fur, token, ptop.name, nombre, pp.id, prl.num_docum_repre, pot.numero' );
         $query = $this->db->get();
         $data1 = $query->result();
         //echo $this->db->last_query();
-        $this->db->select('fur, token, ptop.name, p.nombre, pp.id, p.numero_documento, pot.numero');
-        $this->db->from('pres_prescripcion as pp');
-        $this->db->join('pres_objeto_tributario as pot', 'pp.id = pot.id_prescripcion');
-        $this->db->join('pres_tipo_objeto_tributario as ptop', 'pot.id_tipo_objeto_tributario = ptop.id');
-        $this->db->join('persona as p','pp.id = p.id_prescripcion');
-        $this->db->limit($limit , $offset);
-        $this->db->group_by('fur, token, ptop.name, p.nombre, pp.id, p.numero_documento, pot.numero' );
-        $aux = $this->db->get();
-        $data2 = $aux->result();
-        $data = array_merge($data1, $data2);
+        // $this->db->select('fur, token, ptop.name, p.nombre, pp.id, p.numero_documento, pot.numero');
+        // $this->db->from('pres_prescripcion as pp');
+        // $this->db->join('pres_objeto_tributario as pot', 'pp.id = pot.id_prescripcion');
+        // $this->db->join('pres_tipo_objeto_tributario as ptop', 'pot.id_tipo_objeto_tributario = ptop.id');
+        // $this->db->join('persona as p','pp.id = p.id_prescripcion');
+        // $this->db->limit($limit , $offset);
+        // $this->db->group_by('fur, token, ptop.name, p.nombre, pp.id, p.numero_documento, pot.numero' );
+        // $aux = $this->db->get();
+        // $data2 = $aux->result();
+        // $data = array_merge($data1, $data2);
         //print_r($data);
-        return $data;
+        return $data1;
     }
 }
